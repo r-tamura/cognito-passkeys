@@ -1,0 +1,541 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot Test 1`] = `
+{
+  "Mappings": {
+    "DefaultCrNodeVersionMap": {
+      "af-south-1": {
+        "value": "nodejs16.x",
+      },
+      "ap-east-1": {
+        "value": "nodejs16.x",
+      },
+      "ap-northeast-1": {
+        "value": "nodejs16.x",
+      },
+      "ap-northeast-2": {
+        "value": "nodejs16.x",
+      },
+      "ap-northeast-3": {
+        "value": "nodejs16.x",
+      },
+      "ap-south-1": {
+        "value": "nodejs16.x",
+      },
+      "ap-south-2": {
+        "value": "nodejs16.x",
+      },
+      "ap-southeast-1": {
+        "value": "nodejs16.x",
+      },
+      "ap-southeast-2": {
+        "value": "nodejs16.x",
+      },
+      "ap-southeast-3": {
+        "value": "nodejs16.x",
+      },
+      "ca-central-1": {
+        "value": "nodejs16.x",
+      },
+      "cn-north-1": {
+        "value": "nodejs16.x",
+      },
+      "cn-northwest-1": {
+        "value": "nodejs16.x",
+      },
+      "eu-central-1": {
+        "value": "nodejs16.x",
+      },
+      "eu-central-2": {
+        "value": "nodejs16.x",
+      },
+      "eu-north-1": {
+        "value": "nodejs16.x",
+      },
+      "eu-south-1": {
+        "value": "nodejs16.x",
+      },
+      "eu-south-2": {
+        "value": "nodejs16.x",
+      },
+      "eu-west-1": {
+        "value": "nodejs16.x",
+      },
+      "eu-west-2": {
+        "value": "nodejs16.x",
+      },
+      "eu-west-3": {
+        "value": "nodejs16.x",
+      },
+      "me-central-1": {
+        "value": "nodejs16.x",
+      },
+      "me-south-1": {
+        "value": "nodejs16.x",
+      },
+      "sa-east-1": {
+        "value": "nodejs16.x",
+      },
+      "us-east-1": {
+        "value": "nodejs16.x",
+      },
+      "us-east-2": {
+        "value": "nodejs16.x",
+      },
+      "us-gov-east-1": {
+        "value": "nodejs16.x",
+      },
+      "us-gov-west-1": {
+        "value": "nodejs16.x",
+      },
+      "us-iso-east-1": {
+        "value": "nodejs14.x",
+      },
+      "us-iso-west-1": {
+        "value": "nodejs14.x",
+      },
+      "us-isob-east-1": {
+        "value": "nodejs14.x",
+      },
+      "us-west-1": {
+        "value": "nodejs16.x",
+      },
+      "us-west-2": {
+        "value": "nodejs16.x",
+      },
+    },
+  },
+  "Outputs": {
+    "UserPoolId": {
+      "Value": {
+        "Ref": "UserPool6BA7E5F2",
+      },
+    },
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "CreateAuthChallengeF17130E1": {
+      "DependsOn": [
+        "CreateAuthChallengeServiceRoleF69F0DD3",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "448d4522971b8ba51df86e4156ecf37dcbd660c5d4b2d157405c2ca1e9fd1544.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+          },
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "CreateAuthChallengeServiceRoleF69F0DD3",
+            "Arn",
+          ],
+        },
+        "Runtime": {
+          "Fn::FindInMap": [
+            "DefaultCrNodeVersionMap",
+            {
+              "Ref": "AWS::Region",
+            },
+            "value",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "CreateAuthChallengeLogGroup80857760": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "CreateAuthChallengeF17130E1",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 1,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "CreateAuthChallengeServiceRoleF69F0DD3": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "DefineAuthChallenge5DEF053F": {
+      "DependsOn": [
+        "DefineAuthChallengeServiceRole0226097B",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "1021ae585b4f99d8fba5e0033bedfc3a1767673923be4cbfb33a09b6fae694c0.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+          },
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "DefineAuthChallengeServiceRole0226097B",
+            "Arn",
+          ],
+        },
+        "Runtime": {
+          "Fn::FindInMap": [
+            "DefaultCrNodeVersionMap",
+            {
+              "Ref": "AWS::Region",
+            },
+            "value",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "DefineAuthChallengeLogGroupFAE07C75": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "DefineAuthChallenge5DEF053F",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 1,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "DefineAuthChallengeServiceRole0226097B": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "UserPool6BA7E5F2": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "AccountRecoverySetting": {
+          "RecoveryMechanisms": [
+            {
+              "Name": "verified_phone_number",
+              "Priority": 1,
+            },
+            {
+              "Name": "verified_email",
+              "Priority": 2,
+            },
+          ],
+        },
+        "AdminCreateUserConfig": {
+          "AllowAdminCreateUserOnly": true,
+        },
+        "EmailVerificationMessage": "The verification code to your new account is {####}",
+        "EmailVerificationSubject": "Verify your new account",
+        "LambdaConfig": {
+          "CreateAuthChallenge": {
+            "Fn::GetAtt": [
+              "CreateAuthChallengeF17130E1",
+              "Arn",
+            ],
+          },
+          "DefineAuthChallenge": {
+            "Fn::GetAtt": [
+              "DefineAuthChallenge5DEF053F",
+              "Arn",
+            ],
+          },
+          "VerifyAuthChallengeResponse": {
+            "Fn::GetAtt": [
+              "VerifyAuthChallengeD475B955",
+              "Arn",
+            ],
+          },
+        },
+        "SmsVerificationMessage": "The verification code to your new account is {####}",
+        "VerificationMessageTemplate": {
+          "DefaultEmailOption": "CONFIRM_WITH_CODE",
+          "EmailMessage": "The verification code to your new account is {####}",
+          "EmailSubject": "Verify your new account",
+          "SmsMessage": "The verification code to your new account is {####}",
+        },
+      },
+      "Type": "AWS::Cognito::UserPool",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "UserPoolCreateAuthChallengeCognito07327B9A": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "CreateAuthChallengeF17130E1",
+            "Arn",
+          ],
+        },
+        "Principal": "cognito-idp.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "UserPool6BA7E5F2",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "UserPoolDefineAuthChallengeCognitoD6D10D9D": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "DefineAuthChallenge5DEF053F",
+            "Arn",
+          ],
+        },
+        "Principal": "cognito-idp.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "UserPool6BA7E5F2",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "UserPoolUserPoolClient40176907": {
+      "Properties": {
+        "AllowedOAuthFlows": [
+          "implicit",
+          "code",
+        ],
+        "AllowedOAuthFlowsUserPoolClient": true,
+        "AllowedOAuthScopes": [
+          "profile",
+          "phone",
+          "email",
+          "openid",
+          "aws.cognito.signin.user.admin",
+        ],
+        "CallbackURLs": [
+          "https://example.com",
+        ],
+        "SupportedIdentityProviders": [
+          "COGNITO",
+        ],
+        "UserPoolId": {
+          "Ref": "UserPool6BA7E5F2",
+        },
+      },
+      "Type": "AWS::Cognito::UserPoolClient",
+    },
+    "UserPoolVerifyAuthChallengeResponseCognito338D71F3": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "VerifyAuthChallengeD475B955",
+            "Arn",
+          ],
+        },
+        "Principal": "cognito-idp.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "UserPool6BA7E5F2",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "VerifyAuthChallengeD475B955": {
+      "DependsOn": [
+        "VerifyAuthChallengeServiceRoleFBECCD5E",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "12e89af4548dfb56f4edadadaf6e59daa104cfeeb9c41225386e8298f5d353f2.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+          },
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "VerifyAuthChallengeServiceRoleFBECCD5E",
+            "Arn",
+          ],
+        },
+        "Runtime": {
+          "Fn::FindInMap": [
+            "DefaultCrNodeVersionMap",
+            {
+              "Ref": "AWS::Region",
+            },
+            "value",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "VerifyAuthChallengeLogGroupCE5B6CB3": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "VerifyAuthChallengeD475B955",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 1,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "VerifyAuthChallengeServiceRoleFBECCD5E": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

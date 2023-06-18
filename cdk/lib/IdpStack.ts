@@ -4,10 +4,13 @@ import * as lambdaNodejs from "aws-cdk-lib/aws-lambda-nodejs";
 import * as logs from "aws-cdk-lib/aws-logs";
 import { Construct } from "constructs";
 
+const CUSTOM_ATTR_PUBLICK_KEY_NAME = "publicKeyCred";
 export class IdpStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
-
+    const preSignUp = new UserPoolCustomAuthLambda(this, "PreSignUp", {
+      name: "PreSignUp",
+    });
     const defineAuthChallenge = new UserPoolCustomAuthLambda(
       this,
       "DefineAuthChallenge",
@@ -26,14 +29,33 @@ export class IdpStack extends cdk.Stack {
       { name: "VerifyAuthChallenge" }
     );
 
-    const userpool = new cognito.UserPool(this, "UserPool", {
+    // Note: 自動生成されるリソース名にStack名が含まれない
+    const userpool = new cognito.UserPool(this, `${id}-UserPool`, {
+      selfSignUpEnabled: true,
+      passwordPolicy: {
+        minLength: 6,
+        requireLowercase: false,
+        requireUppercase: false,
+        requireDigits: false,
+        requireSymbols: false,
+      },
+      customAttributes: {
+        [CUSTOM_ATTR_PUBLICK_KEY_NAME]: new cognito.StringAttribute(),
+      },
       lambdaTriggers: {
+        preSignUp: preSignUp.triggerFn, // Confirmationを自動化するため
         defineAuthChallenge: defineAuthChallenge.triggerFn,
         createAuthChallenge: createAuthChallenge.triggerFn,
         verifyAuthChallengeResponse: verifyAuthChallenge.triggerFn,
       },
     });
-    userpool.addClient("UserPoolClient", {});
+    userpool.addClient(`${id}-UserPoolClient`, {
+      authFlows: {
+        custom: true,
+        userSrp: true,
+        adminUserPassword: true,
+      },
+    });
 
     new cdk.CfnOutput(this, "UserPoolId", { value: userpool.userPoolId });
   }

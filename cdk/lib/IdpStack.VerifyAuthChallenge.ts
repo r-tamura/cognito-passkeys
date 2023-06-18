@@ -1,6 +1,6 @@
 import * as nodeCrypto from "node:crypto";
 
-export async function verifyAuthChallenge(event: any) {
+export async function handler(event: any) {
   console.log(event);
 
   //--------get private challenge data

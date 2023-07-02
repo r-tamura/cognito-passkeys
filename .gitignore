@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 aws-exports*
-
+work/*

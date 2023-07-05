@@ -11,7 +11,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { Amplify, Auth } from "aws-amplify";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Amplify } from "aws-amplify";
 import React, { useRef } from "react";
 import {
   Link,
@@ -20,28 +21,19 @@ import {
   createBrowserRouter,
   useNavigate,
 } from "react-router-dom";
+import {
+  AuthLoader,
+  isAmplifyAuthError,
+  useLogin,
+  useLogout,
+  useRegister,
+} from "./auth";
 import awsConfig from "./aws-exports";
 
 Amplify.configure(awsConfig);
-const CUSTOM_ATTR_PUBLICK_KEY_NAME = "publicKeyCred";
-
-type AmplifyError = {
-  code: string;
-  message: string;
-};
-
-const isAmplifyError = (err: unknown): err is AmplifyError => {
-  return (
-    typeof err === "object" &&
-    err != null &&
-    "code" in err &&
-    typeof err["code"] === "string" &&
-    "message" in err &&
-    typeof err["message"] === "string"
-  );
-};
 
 const SignUp: React.FC = () => {
+  const register = useRegister();
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -50,28 +42,51 @@ const SignUp: React.FC = () => {
     e.stopPropagation();
     console.debug("signup start");
 
-    try {
-      const response = await Auth.signUp({
+    register.mutate(
+      {
         username: usernameRef.current?.value ?? "",
         password: passwordRef.current?.value ?? "",
-        attributes: {
-          [`custom:${CUSTOM_ATTR_PUBLICK_KEY_NAME}`]: "testpublickey",
+        publicKeyCred: "testpublickey",
+      },
+      {
+        onSuccess: (cognitoUser) => {
+          console.log({ cognitoUser });
+          console.debug("signup end");
+          navigate("/signin");
         },
-        autoSignIn: {
-          enabled: true,
+        onError: (err: unknown) => {
+          if (isAmplifyAuthError(err)) {
+            console.error(err.message);
+            navigate("/signin");
+          } else {
+            console.error("unknown error", err);
+          }
         },
-      });
-      console.log({ response });
-      console.debug("signup end");
-      navigate("/signin");
-    } catch (err: unknown) {
-      if (isAmplifyError(err)) {
-        console.error(err.message);
-        navigate("/signin");
-      } else {
-        console.error("unknown error", err);
       }
-    }
+    );
+
+    // try {
+    //   const response = await Auth.signUp({
+    //     username: usernameRef.current?.value ?? "",
+    //     password: passwordRef.current?.value ?? "",
+    //     attributes: {
+    //       [`custom:${CUSTOM_ATTR_PUBLICK_KEY_NAME}`]: "testpublickey",
+    //     },
+    //     autoSignIn: {
+    //       enabled: true,
+    //     },
+    //   });
+    //   console.log({ response });
+    //   console.debug("signup end");
+    //   navigate("/signin");
+    // } catch (err: unknown) {
+    //   if (isAmplifyError(err)) {
+    //     console.error(err.message);
+    //     navigate("/signin");
+    //   } else {
+    //     console.error("unknown error", err);
+    //   }
+    // }
 
     /*
     {
@@ -141,26 +156,32 @@ const SignUp: React.FC = () => {
 const SignIn: React.FC = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const login = useLogin();
   const navigate = useNavigate();
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    try {
-      const cognitoUser = await Auth.signIn({
+    login.mutate(
+      {
         username: usernameRef.current?.value ?? "",
         password: passwordRef.current?.value ?? "",
-      });
-      console.log({ cognitoUser });
-      console.debug("signup end");
-      navigate("/home");
-    } catch (err: unknown) {
-      if (isAmplifyError(err)) {
-        console.error(err.message);
-      } else {
-        console.error("unknown error", err);
+      },
+      {
+        onSuccess: (cognitoUser) => {
+          console.log({ cognitoUser });
+          console.debug("signup end");
+          navigate("/home");
+        },
+        onError: (err: unknown) => {
+          if (isAmplifyAuthError(err)) {
+            console.error(err.message);
+          } else {
+            console.error("unknown error", err);
+          }
+        },
       }
-    }
+    );
   };
 
   return (
@@ -188,6 +209,20 @@ const SignIn: React.FC = () => {
 };
 
 const Header: React.FC = () => {
+  const logout = useLogout();
+  const navigate = useNavigate();
+
+  const handleSingOut = () => {
+    logout.mutate(
+      {},
+      {
+        onSuccess: () => {
+          navigate("/signin");
+        },
+      }
+    );
+  };
+
   return (
     <Flex h={"16"} w={"full"} alignItems={"center"} p={"4"}>
       <Text marginInlineEnd="auto">
@@ -201,7 +236,7 @@ const Header: React.FC = () => {
         gap={"2"}
       >
         <Box>
-          <Button>Sign out</Button>
+          <Button onClick={handleSingOut}>Sign out</Button>
         </Box>
       </Flex>
     </Flex>
@@ -251,6 +286,17 @@ const App: React.FC = () => {
   return <></>;
 };
 
+const AuthRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (
+    <AuthLoader
+      renderLoading={() => <p>loading...</p>}
+      renderUnauthenticated={() => <Navigate to="/signin" />}
+    >
+      {children}
+    </AuthLoader>
+  );
+};
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -261,13 +307,24 @@ const router = createBrowserRouter([
     element: <SignUp />,
   },
   { path: "/signin", element: <SignIn /> },
-  { path: "/home", element: <Home /> },
+  {
+    path: "/home",
+    element: (
+      <AuthRoute>
+        <Home />
+      </AuthRoute>
+    ),
+  },
 ]);
+
+const queryClient = new QueryClient();
 
 const Providers: React.FC = () => {
   return (
     <ChakraProvider>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </ChakraProvider>
   );
 };

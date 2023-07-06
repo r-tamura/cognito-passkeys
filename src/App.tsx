@@ -28,9 +28,13 @@ import {
   useLogout,
   useRegister,
 } from "./auth";
-import awsConfig from "./aws-exports";
 
-Amplify.configure(awsConfig);
+Amplify.configure({
+  Auth: {
+    userPoolId: import.meta.env.VITE_AMAZON_COGNITO_USERPOOL_ID,
+    userPoolWebClientId: import.meta.env.VITE_AMAZON_COGNITO_APP_ID,
+  },
+});
 
 const SignUp: React.FC = () => {
   const register = useRegister();
@@ -282,10 +286,6 @@ const Index: React.FC = () => {
   return <Navigate to="/signin" />;
 };
 
-const App: React.FC = () => {
-  return <></>;
-};
-
 const AuthRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <AuthLoader
@@ -319,7 +319,7 @@ const router = createBrowserRouter([
 
 const queryClient = new QueryClient();
 
-const Providers: React.FC = () => {
+const App: React.FC = () => {
   return (
     <ChakraProvider>
       <QueryClientProvider client={queryClient}>
@@ -329,4 +329,4 @@ const Providers: React.FC = () => {
   );
 };
 
-export default Providers;
+export default App;

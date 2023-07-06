@@ -19,11 +19,6 @@ type RegisterParams = {
   publicKeyCred: string;
 };
 
-type Credentials = {
-  username: string;
-  password: string;
-};
-
 type AmplifyError = {
   code: string;
   message: string;
@@ -55,8 +50,8 @@ export const { useUser, useLogin, useRegister, useLogout, AuthLoader } =
           console.error(`${err.code}: ${err.message}`);
         } else {
           console.error(`unexpected error occured: ${err}"`);
-          return null;
         }
+        return null;
       }
     },
     loginFn: async (credentials) => {
@@ -67,7 +62,7 @@ export const { useUser, useLogin, useRegister, useLogout, AuthLoader } =
       return cognitoUser;
     },
     registerFn: async (credentials) => {
-      const signUpResult = await Auth.signUp({
+      await Auth.signUp({
         username: credentials.username,
         password: credentials.password,
         attributes: {

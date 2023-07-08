@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   ChakraProvider,
-  Divider,
   Flex,
   FormControl,
   FormLabel,
@@ -21,6 +20,7 @@ import {
   createBrowserRouter,
   useNavigate,
 } from "react-router-dom";
+import { Home } from "./Home";
 import {
   AuthLoader,
   isAmplifyAuthError,
@@ -212,7 +212,7 @@ const SignIn: React.FC = () => {
   );
 };
 
-const Header: React.FC = () => {
+export const Header: React.FC = () => {
   const logout = useLogout();
   const navigate = useNavigate();
 
@@ -244,41 +244,6 @@ const Header: React.FC = () => {
         </Box>
       </Flex>
     </Flex>
-  );
-};
-
-const Home: React.FC = () => {
-  const onPassKeyRemove = () => {
-    console.log("passkey remove clicked");
-  };
-
-  return (
-    <Box>
-      <Header />
-      <Flex
-        direction={"column"}
-        m={"0 auto"}
-        maxInlineSize={"540px"}
-        p={"4"}
-        gap={"4"}
-      >
-        <Box p={"2"}>Email: random@mail.local</Box>
-        <Divider />
-        <Box p={"2"}>
-          <Box marginBlockEnd="2">
-            <Text fontWeight={"bold"}>Passkeys</Text>
-          </Box>
-          <Flex direction={"column"} inlineSize={"full"}>
-            <Flex alignItems={"center"} gap={"4"} inlineSize={"full"}>
-              <Text>Passkey 1</Text>
-              <Button onClick={onPassKeyRemove} marginInlineStart={"auto"}>
-                Remove
-              </Button>
-            </Flex>
-          </Flex>
-        </Box>
-      </Flex>
-    </Box>
   );
 };
 

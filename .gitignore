@@ -23,7 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 
+# wrangler
+.dev.vars
+
 # Custom
 aws-exports*
-work/*
+work
 .env*
+

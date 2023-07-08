@@ -40,7 +40,6 @@ const CUSTOM_ATTR_PUBLICK_KEY_NAME = "publicKeyCred";
 export const { useUser, useLogin, useRegister, useLogout, AuthLoader } =
   configureAuth<CognitoUser, AuthError, LoginParams, RegisterParams>({
     userFn: async () => {
-      console.log("current user");
       try {
         const cognitoUser = await Auth.currentAuthenticatedUser();
         console.log({ cognitoUser });

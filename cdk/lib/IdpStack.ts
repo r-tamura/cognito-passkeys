@@ -40,7 +40,9 @@ export class IdpStack extends cdk.Stack {
         requireSymbols: false,
       },
       customAttributes: {
-        [CUSTOM_ATTR_PUBLICK_KEY_NAME]: new cognito.StringAttribute(),
+        [CUSTOM_ATTR_PUBLICK_KEY_NAME]: new cognito.StringAttribute({
+          mutable: true,
+        }),
       },
       lambdaTriggers: {
         preSignUp: preSignUp.triggerFn, // Confirmationを自動化するため
@@ -48,6 +50,8 @@ export class IdpStack extends cdk.Stack {
         createAuthChallenge: createAuthChallenge.triggerFn,
         verifyAuthChallengeResponse: verifyAuthChallenge.triggerFn,
       },
+
+      deletionProtection: false,
     });
     userpool.addClient(`${id}-UserPoolClient`, {
       authFlows: {

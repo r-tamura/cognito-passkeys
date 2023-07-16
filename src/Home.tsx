@@ -1,17 +1,74 @@
 import { Box, Button, Divider, Flex, Text } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { hc } from "hono/client";
 import React from "react";
+import { AppType } from "../functions/api/[[routes]]";
 import { Header } from "./App";
+import { useUser } from "./auth";
+import { decodeServerOptions, encodeCredential } from "./webauthn";
+
+function invariant(
+  condition: unknown,
+  message: string = "invariant error occured"
+): asserts condition {
+  if (!condition) {
+    throw new Error(message);
+  }
+}
+
+function invariantPublicKey(
+  cred: Credential | null
+): asserts cred is PublicKeyCredential {
+  invariant(cred !== null);
+}
 
 export const Home: React.FC = () => {
-  const { data } = useQuery({
-    queryKey: ["helloworld"],
-    queryFn: async () => {
-      return await fetch("/api/helloworld").then((res) => res.text());
+  const client = hc<AppType>("/");
+  const { data: user } = useUser();
+  const requestRegister = useMutation({
+    mutationKey: ["register/request"],
+    mutationFn: async () => {
+      if (user === undefined) {
+        throw new Error("user is undefined");
+      }
+      const idToken = user
+        .getSignInUserSession()
+        ?.getIdToken()
+        .getJwtToken()
+        .toString();
+      if (idToken === undefined) {
+        throw new Error("idToken is undefined");
+      }
+      const encodedServerOptions = await client.api.register.request
+        .$post(undefined, { headers: { Authorization: idToken } })
+        .then((res) => res.json());
+
+      const serverOptions = decodeServerOptions(encodedServerOptions);
+      console.log(serverOptions);
+
+      const publicKeyCred = await navigator.credentials.create({
+        publicKey: serverOptions,
+      });
+
+      invariantPublicKey(publicKeyCred);
+      const encodePublicKeyCred = encodeCredential(publicKeyCred);
+
+      await client.api.register.response.$post(
+        {
+          json: encodePublicKeyCred,
+        },
+        { headers: { Authorization: idToken } }
+      );
+
+      return null;
     },
   });
   const onPassKeyRemove = () => {
     console.log("passkey remove clicked");
+  };
+
+  const onCreateNewKey = () => {
+    requestRegister.mutate();
   };
 
   return (
@@ -27,9 +84,15 @@ export const Home: React.FC = () => {
         <Box p={"2"}>Email: random@mail.local</Box>
         <Divider />
         <Box p={"2"}>
-          <Box marginBlockEnd="2">
-            <Text fontWeight={"bold"}>Passkeys</Text>
-          </Box>
+          <Flex w="full" marginBlockEnd="2">
+            <Box>
+              <Text fontWeight={"bold"}>Passkeys</Text>
+            </Box>
+            <Box onClick={onCreateNewKey} marginInlineStart={"auto"}>
+              <Button>新しいキーを追加</Button>
+            </Box>
+          </Flex>
+
           <Flex direction={"column"} inlineSize={"full"}>
             <Flex alignItems={"center"} gap={"4"} inlineSize={"full"}>
               <Text>Passkey 1</Text>
@@ -39,7 +102,9 @@ export const Home: React.FC = () => {
             </Flex>
           </Flex>
         </Box>
-        <Box>{data ? data : "loading..."}</Box>
+        <Box>
+          {requestRegister.isLoading ? "loading..." : requestRegister.data}
+        </Box>
       </Flex>
     </Box>
   );

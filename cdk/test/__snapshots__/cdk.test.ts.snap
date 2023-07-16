@@ -2,113 +2,10 @@
 
 exports[`Snapshot Test 1`] = `
 {
-  "Mappings": {
-    "DefaultCrNodeVersionMap": {
-      "af-south-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-east-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-northeast-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-northeast-2": {
-        "value": "nodejs16.x",
-      },
-      "ap-northeast-3": {
-        "value": "nodejs16.x",
-      },
-      "ap-south-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-south-2": {
-        "value": "nodejs16.x",
-      },
-      "ap-southeast-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-southeast-2": {
-        "value": "nodejs16.x",
-      },
-      "ap-southeast-3": {
-        "value": "nodejs16.x",
-      },
-      "ca-central-1": {
-        "value": "nodejs16.x",
-      },
-      "cn-north-1": {
-        "value": "nodejs16.x",
-      },
-      "cn-northwest-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-central-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-central-2": {
-        "value": "nodejs16.x",
-      },
-      "eu-north-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-south-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-south-2": {
-        "value": "nodejs16.x",
-      },
-      "eu-west-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-west-2": {
-        "value": "nodejs16.x",
-      },
-      "eu-west-3": {
-        "value": "nodejs16.x",
-      },
-      "me-central-1": {
-        "value": "nodejs16.x",
-      },
-      "me-south-1": {
-        "value": "nodejs16.x",
-      },
-      "sa-east-1": {
-        "value": "nodejs16.x",
-      },
-      "us-east-1": {
-        "value": "nodejs16.x",
-      },
-      "us-east-2": {
-        "value": "nodejs16.x",
-      },
-      "us-gov-east-1": {
-        "value": "nodejs16.x",
-      },
-      "us-gov-west-1": {
-        "value": "nodejs16.x",
-      },
-      "us-iso-east-1": {
-        "value": "nodejs14.x",
-      },
-      "us-iso-west-1": {
-        "value": "nodejs14.x",
-      },
-      "us-isob-east-1": {
-        "value": "nodejs14.x",
-      },
-      "us-west-1": {
-        "value": "nodejs16.x",
-      },
-      "us-west-2": {
-        "value": "nodejs16.x",
-      },
-    },
-  },
   "Outputs": {
     "UserPoolId": {
       "Value": {
-        "Ref": "UserPool6BA7E5F2",
+        "Ref": "MyTestStackUserPool56C1473F",
       },
     },
   },
@@ -129,7 +26,7 @@ exports[`Snapshot Test 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "448d4522971b8ba51df86e4156ecf37dcbd660c5d4b2d157405c2ca1e9fd1544.zip",
+          "S3Key": "8ba4dce4b7cbc1d9c4e4f703d01c8c5e4f03de5722fd9353b5308b226e7436cb.zip",
         },
         "Environment": {
           "Variables": {
@@ -143,15 +40,7 @@ exports[`Snapshot Test 1`] = `
             "Arn",
           ],
         },
-        "Runtime": {
-          "Fn::FindInMap": [
-            "DefaultCrNodeVersionMap",
-            {
-              "Ref": "AWS::Region",
-            },
-            "value",
-          ],
-        },
+        "Runtime": "nodejs18.x",
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -214,7 +103,7 @@ exports[`Snapshot Test 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "1021ae585b4f99d8fba5e0033bedfc3a1767673923be4cbfb33a09b6fae694c0.zip",
+          "S3Key": "b3efbc8bbc5ca638d768ba685514d0aa78b1a006e7ca853b5d9e3882d0849b2e.zip",
         },
         "Environment": {
           "Variables": {
@@ -228,15 +117,7 @@ exports[`Snapshot Test 1`] = `
             "Arn",
           ],
         },
-        "Runtime": {
-          "Fn::FindInMap": [
-            "DefaultCrNodeVersionMap",
-            {
-              "Ref": "AWS::Region",
-            },
-            "value",
-          ],
-        },
+        "Runtime": "nodejs18.x",
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -290,7 +171,7 @@ exports[`Snapshot Test 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "UserPool6BA7E5F2": {
+    "MyTestStackUserPool56C1473F": {
       "DeletionPolicy": "Retain",
       "Properties": {
         "AccountRecoverySetting": {
@@ -306,8 +187,9 @@ exports[`Snapshot Test 1`] = `
           ],
         },
         "AdminCreateUserConfig": {
-          "AllowAdminCreateUserOnly": true,
+          "AllowAdminCreateUserOnly": false,
         },
+        "DeletionProtection": "INACTIVE",
         "EmailVerificationMessage": "The verification code to your new account is {####}",
         "EmailVerificationSubject": "Verify your new account",
         "LambdaConfig": {
@@ -323,6 +205,12 @@ exports[`Snapshot Test 1`] = `
               "Arn",
             ],
           },
+          "PreSignUp": {
+            "Fn::GetAtt": [
+              "PreSignUpF5276C02",
+              "Arn",
+            ],
+          },
           "VerifyAuthChallengeResponse": {
             "Fn::GetAtt": [
               "VerifyAuthChallengeD475B955",
@@ -330,6 +218,22 @@ exports[`Snapshot Test 1`] = `
             ],
           },
         },
+        "Policies": {
+          "PasswordPolicy": {
+            "MinimumLength": 6,
+            "RequireLowercase": false,
+            "RequireNumbers": false,
+            "RequireSymbols": false,
+            "RequireUppercase": false,
+          },
+        },
+        "Schema": [
+          {
+            "AttributeDataType": "String",
+            "Mutable": true,
+            "Name": "publicKeyCred",
+          },
+        ],
         "SmsVerificationMessage": "The verification code to your new account is {####}",
         "VerificationMessageTemplate": {
           "DefaultEmailOption": "CONFIRM_WITH_CODE",
@@ -341,7 +245,7 @@ exports[`Snapshot Test 1`] = `
       "Type": "AWS::Cognito::UserPool",
       "UpdateReplacePolicy": "Retain",
     },
-    "UserPoolCreateAuthChallengeCognito07327B9A": {
+    "MyTestStackUserPoolCreateAuthChallengeCognitoA66E6F46": {
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -353,14 +257,14 @@ exports[`Snapshot Test 1`] = `
         "Principal": "cognito-idp.amazonaws.com",
         "SourceArn": {
           "Fn::GetAtt": [
-            "UserPool6BA7E5F2",
+            "MyTestStackUserPool56C1473F",
             "Arn",
           ],
         },
       },
       "Type": "AWS::Lambda::Permission",
     },
-    "UserPoolDefineAuthChallengeCognitoD6D10D9D": {
+    "MyTestStackUserPoolDefineAuthChallengeCognitoAB7432E4": {
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -372,14 +276,14 @@ exports[`Snapshot Test 1`] = `
         "Principal": "cognito-idp.amazonaws.com",
         "SourceArn": {
           "Fn::GetAtt": [
-            "UserPool6BA7E5F2",
+            "MyTestStackUserPool56C1473F",
             "Arn",
           ],
         },
       },
       "Type": "AWS::Lambda::Permission",
     },
-    "UserPoolUserPoolClient40176907": {
+    "MyTestStackUserPoolMyTestStackUserPoolClientADFD5FF9": {
       "Properties": {
         "AllowedOAuthFlows": [
           "implicit",
@@ -396,16 +300,41 @@ exports[`Snapshot Test 1`] = `
         "CallbackURLs": [
           "https://example.com",
         ],
+        "ExplicitAuthFlows": [
+          "ALLOW_ADMIN_USER_PASSWORD_AUTH",
+          "ALLOW_CUSTOM_AUTH",
+          "ALLOW_USER_SRP_AUTH",
+          "ALLOW_REFRESH_TOKEN_AUTH",
+        ],
         "SupportedIdentityProviders": [
           "COGNITO",
         ],
         "UserPoolId": {
-          "Ref": "UserPool6BA7E5F2",
+          "Ref": "MyTestStackUserPool56C1473F",
         },
       },
       "Type": "AWS::Cognito::UserPoolClient",
     },
-    "UserPoolVerifyAuthChallengeResponseCognito338D71F3": {
+    "MyTestStackUserPoolPreSignUpCognito4619AD77": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "PreSignUpF5276C02",
+            "Arn",
+          ],
+        },
+        "Principal": "cognito-idp.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "MyTestStackUserPool56C1473F",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "MyTestStackUserPoolVerifyAuthChallengeResponseCognito5A3C95F9": {
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -417,12 +346,89 @@ exports[`Snapshot Test 1`] = `
         "Principal": "cognito-idp.amazonaws.com",
         "SourceArn": {
           "Fn::GetAtt": [
-            "UserPool6BA7E5F2",
+            "MyTestStackUserPool56C1473F",
             "Arn",
           ],
         },
       },
       "Type": "AWS::Lambda::Permission",
+    },
+    "PreSignUpF5276C02": {
+      "DependsOn": [
+        "PreSignUpServiceRole71731100",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "a2f05e677d1037f11e201d0500a902d992ea946761dad7277eecd9dc96ffec94.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+          },
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "PreSignUpServiceRole71731100",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "PreSignUpLogGroupEBB56C88": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "PreSignUpF5276C02",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 1,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "PreSignUpServiceRole71731100": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
     },
     "VerifyAuthChallengeD475B955": {
       "DependsOn": [
@@ -433,7 +439,7 @@ exports[`Snapshot Test 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "12e89af4548dfb56f4edadadaf6e59daa104cfeeb9c41225386e8298f5d353f2.zip",
+          "S3Key": "a8f14c4123d42f86b69e7793ea0d4ebe8cfb3aed389dd15b2605fe812f44c8ba.zip",
         },
         "Environment": {
           "Variables": {
@@ -447,15 +453,7 @@ exports[`Snapshot Test 1`] = `
             "Arn",
           ],
         },
-        "Runtime": {
-          "Fn::FindInMap": [
-            "DefaultCrNodeVersionMap",
-            {
-              "Ref": "AWS::Region",
-            },
-            "value",
-          ],
-        },
+        "Runtime": "nodejs18.x",
       },
       "Type": "AWS::Lambda::Function",
     },

@@ -68,63 +68,6 @@ const SignUp: React.FC = () => {
         },
       }
     );
-
-    // try {
-    //   const response = await Auth.signUp({
-    //     username: usernameRef.current?.value ?? "",
-    //     password: passwordRef.current?.value ?? "",
-    //     attributes: {
-    //       [`custom:${CUSTOM_ATTR_PUBLICK_KEY_NAME}`]: "testpublickey",
-    //     },
-    //     autoSignIn: {
-    //       enabled: true,
-    //     },
-    //   });
-    //   console.log({ response });
-    //   console.debug("signup end");
-    //   navigate("/signin");
-    // } catch (err: unknown) {
-    //   if (isAmplifyError(err)) {
-    //     console.error(err.message);
-    //     navigate("/signin");
-    //   } else {
-    //     console.error("unknown error", err);
-    //   }
-    // }
-
-    /*
-    {
-      "response": {
-          "user": {
-              "username": "webauthntest",
-              "pool": {
-                  "userPoolId": "...",
-                  "clientId": "...",
-                  "client": {
-                      "endpoint": "https://cognito-idp.ap-northeast-1.amazonaws.com/",
-                      "fetchOptions": {}
-                  },
-                  "advancedSecurityDataCollectionFlag": true,
-                  "storage": {
-                      "amplify-auto-sign-in": "true"
-                  }
-              },
-              "Session": null,
-              "client": {
-                  "endpoint": "https://cognito-idp.ap-northeast-1.amazonaws.com/",
-                  "fetchOptions": {}
-              },
-              "signInUserSession": null,
-              "authenticationFlowType": "USER_SRP_AUTH",
-              "storage": {
-                  "amplify-auto-sign-in": "true"
-              },
-          },
-          "userConfirmed": false,
-          "userSub": "..."
-        }
-    }
-    */
   };
   return (
     <Box maxInlineSize={"48"} marginInline={"auto"}>
